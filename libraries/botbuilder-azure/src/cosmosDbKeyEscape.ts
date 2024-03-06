@@ -5,7 +5,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
-import { hashSync } from 'bcrypt';
+import * as bcrypt from 'bcryptjs'; // Import the entire bcryptjs module
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace CosmosDbKeyEscape {
@@ -18,7 +18,6 @@ export namespace CosmosDbKeyEscape {
     const illegalKeyCharacterReplacementMap: Map<string, string> = illegalKeys.reduce<Map<string, string>>(
         (map: Map<string, string>, c: string) => {
             map.set(c, `*${c.charCodeAt(0).toString(16)}`);
-
             return map;
         },
         new Map()
@@ -74,7 +73,7 @@ export namespace CosmosDbKeyEscape {
 
             if (key.length > maxKeyLength) {
                 const saltRounds = 10;
-                key = hashSync(key, saltRounds);
+                key = bcrypt.hashSync(key, saltRounds); // Use bcrypt.hashSync from the imported bcryptjs module
             }
             return key;
         }
